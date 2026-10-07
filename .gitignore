@@ -1,0 +1,29 @@
+# secrets
+.env
+.env.*
+!.env.example
+
+# media never goes in git
+*.mp4
+*.mov
+*.MP4
+*.MOV
+*.mp3
+*.wav
+*.m4a
+*.jpg
+*.jpeg
+*.png
+
+# capcut side files that are not needed for regeneration
+draft_cover.jpg
+draft_agency_config.json
+draft_settings
+draft.extra
+**/draft_out/Resources/
+**/draft_out/common_attachment/
+
+# python
+__pycache__/
+*.pyc
+.venv/
