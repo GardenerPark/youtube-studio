@@ -15,6 +15,8 @@ pipeline/
   analyze_with_gemini.py   # URL → scene_plan.json (+ analysis.md). Gemini API 키 필요
   make_capcut_draft.py     # scene_plan.json → CapCut 드래프트 폴더. 의존성 없음
   schema.md                # scene_plan.json 스키마
+  gemini_prompt.md         # Gemini 웹앱에 붙여넣는 프롬프트 3종
+  merge_gemini_output.py   # Gemini가 준 JSON 정리 → scene_plan.json
 videos/
   L8OVETatbd0/             # 영상 ID별 폴더
     analysis.md            # 구조·대본 비트·연출·음악 큐 분석
@@ -60,7 +62,21 @@ python3 pipeline/make_capcut_draft.py videos/L8OVETatbd0/scene_plan.json videos/
 
 같은 트랙 안에서 구간이 겹치면 에러로 멈춘다. 메시지에 겹친 시간이 나온다.
 
-## 3. 다른 영상 분석하기 (Gemini API)
+## 3. 다른 영상 분석하기
+
+### 3a. Gemini 웹앱에서 직접 (API 키 불필요)
+
+`pipeline/gemini_prompt.md`의 프롬프트 A(연출 분석), B(내레이션 전문), C(JSON)를 gemini.google.com 에 순서대로 붙여넣는다.
+C의 결과를 저장한 뒤:
+
+```bash
+python3 pipeline/merge_gemini_output.py videos/$VID/scene_plan_gemini.json videos/$VID/scene_plan.json --video-id $VID
+python3 pipeline/make_capcut_draft.py videos/$VID/scene_plan.json videos/$VID/draft_out/
+```
+
+merge 단계가 코드펜스 제거, mm:ss → 초 변환, 겹침 보정, 빠진 필드 채우기를 해 준다.
+
+### 3b. Gemini API로 자동화
 
 Gemini는 공개 YouTube URL을 바로 보고 영상+오디오 타임스탬프를 돌려준다.
 
